@@ -77,7 +77,7 @@ for cut in ["FD"]:#cuts:
     ThPhi[0].setCanvas(True,2,2); 
     for i in range(4): ThPhi[i].Draw("COLZ", fdir+"ThetaPhi.pdf",i+1)
     
-    os.system("pdfunite "+fdir+"* "+"~/my_analysis/kaon/pdfs/"+\
+    os.system("pdfunite "+fdir+"*.pdf "+"~/my_analysis/kaon/pdfs/"+\
             "_".join(fdir.split("/")[-3:-1])+".pdf")
 
     #w    = [q2w.ProjectionX(c_gb+"w_q2bin"+str(q2), BinFloor(q2, bc),BinFloor(q2+1,bc)) for q2 in range(10)]

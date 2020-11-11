@@ -115,7 +115,7 @@ class EPKpKm_FD_mon {
             if ( kpcut  ) { isgood = isgood && Math.abs((mm2kp.mass2()-mu0kp)/sig0kp/1) < 4 }
             if ( kmcut  ) { isgood = isgood && Math.abs((mm2km.mass2()-mu0km)/sig0km/1) < 4 }
             if ( ecut   ) { isgood = isgood && Math.abs((mm.e()-mu0me)/sig0me/1) < 4 }
-            if ( vzcut  ) { isgood = isgood && ((vzkp-vzkm)-mu0vz)/sig0vz/1 < 4 }
+            if ( vzcut  ) { isgood = isgood && Math.abs(((vzkp-vzkm)-mu0vz)/sig0vz/1) < 4 }
             if ( cpcut  ) { isgood = isgood && mm2pro.vect().theta(pro.vect()) < 9 }
             if ( ckpcut ) { isgood = isgood && mm2kp.vect().theta(kp.vect()) < 9 }
             if ( ckmcut ) { isgood = isgood && mm2km.vect().theta(km.vect()) < 9 }
