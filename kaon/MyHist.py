@@ -155,18 +155,18 @@ class MyHist(MyData):
     pars = self.fit.GetParameters()
     setRange([pars[1]-3*pars[2], pars[1]+3*pars[2]])
 
-  def setCanvas(self, clear=False, rows=None, cols=None):
+  def setCanvas(self, clear=False, rows=1, cols=1):
     if clear:
       self.c.Clear()
-    if rows is not None and cols is not None:
-      self.c.Divide(cols,rows)
+    self.c.Divide(cols,rows)
 
-  def Draw(self, drawopt, fname, pos = 1, print_bg=True ):
+  def Draw(self, drawopt, fname, pos = 1, col=ROOT.kBlue, print_bg=True ):
     self.c.cd(pos)
     self.hist.SetLineColor(ROOT.kBlue)
     if self.hist.__class__ is ROOT.TH1F:
       self.hist.SetMinimum(0)
     #self.c.SetGrid(True)
+    self.hist.SetLineColor(col)
     self.hist.Draw(drawopt)
     if print_bg and self.fitted:
       #self.lg.Draw("same")
