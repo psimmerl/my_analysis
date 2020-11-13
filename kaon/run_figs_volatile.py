@@ -1,7 +1,7 @@
 import ROOT, math, sys, argparse
 from MyHist import * 
 
-pDir  = "~/my_analysis/kaon/pdfs/"
+pDir  = "kaon/pdfs/"
 
 ct = "counts"
 xvz = "#Delta Vz_{K^{+}}-Vz_{K^{-}}"

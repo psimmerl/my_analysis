@@ -23,6 +23,9 @@ run-groovy gen_hist.groovy $kFD $dir/all_cuts.root  $dir/hists/fits.json ecut pc
 wait
 
 python2.7 kaon/run_brandon_volatile.py $dir/mass_cuts.root $dir/mass_cuts/ &
+
+wait
+
 python2.7 kaon/run_brandon_volatile.py $dir/vz_cut.root    $dir/vz_cut/ &
 python2.7 kaon/run_brandon_volatile.py $dir/cp_cut.root    $dir/cp_cut/ &
 python2.7 kaon/run_brandon_volatile.py $dir/ckp_cut.root   $dir/ckp_cut/ &
@@ -48,3 +51,9 @@ wait
 
 
 python2.7 kaon/run_figs_volatile.py 
+
+cp $dir/hists/PASS/*P*        kaon/pdfs/diagnostics/no_cuts/
+cp $dir/hists/PASS/q2w.pdf    kaon/pdfs/diagnostics/no_cuts/
+cp $dir/all_cuts/PASS/*P*     kaon/pdfs/diagnostics/all_cuts/
+cp $dir/all_cuts/PASS/q2w.pdf kaon/pdfs/diagnostics/all_cuts/
+
