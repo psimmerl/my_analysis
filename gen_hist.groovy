@@ -31,8 +31,9 @@ def vzcut = args.contains("vzcut")
 def cpcut = args.contains("cpcut")
 def ckpcut = args.contains("ckpcut")
 def ckmcut = args.contains("ckmcut")
-print(ecut);print(pcut);print(kpcut);print(kmcut);print(vzcut);print(cpcut);print(ckpcut);println(ckmcut)
-def kaon_proc = new EPKpKm_FD_mon(ecut, pcut, kpcut, kmcut, vzcut, cpcut, ckpcut, ckmcut)
+def ikkcut = args.contains("ikkcut")
+print(ecut);print(pcut);print(kpcut);print(kmcut);print(vzcut);print(cpcut);print(ckpcut);println(ckmcut);print(ikkcut)
+def kaon_proc = new EPKpKm_FD_mon(ecut, pcut, kpcut, kmcut, vzcut, cpcut, ckpcut, ckmcut, ikkcut)
 
 
 def evcount = new AtomicInteger()

@@ -7,7 +7,7 @@ ROOT.gROOT.SetBatch()
 ROOT.gStyle.SetOptFit()
 ROOT.gStyle.SetPadGridX(ROOT.kTRUE)
 ROOT.gStyle.SetPadGridY(ROOT.kTRUE)
-ROOT.gStyle.SetOptStat("ne")
+ROOT.gStyle.SetOptStat("")
 
 
 class MyData:
@@ -40,7 +40,6 @@ class MyHist(MyData):
     self.hist.GetYaxis().SetTitle(ylabel)
 
   def setRootFile(self, fname ):
-    #self.froot.Open(fname)
     self.froot =  ROOT.TFile( fname )
    
   def GetName(self):
@@ -65,7 +64,6 @@ class MyHist(MyData):
   def gaussFit(self, mu0, dmu0=0.4 ):
     if self.hist.GetEntries() == 0:
       print("Can't Fit!")
-      #TODO
       self.fjson[self.name] = [0, [0, mu0, 5*mu0, 0, 0, 0]] 
       return None
 
@@ -92,7 +90,7 @@ class MyHist(MyData):
           /(xhigh-xlow)
     p0 = self.hist.GetBinContent(xa.FindBin(xlow))-p1*xlow
     A0_2 = A0-p0-p1*mu0 
-    pars = [A0_2, mu0, sig0, p0, p1] 
+    pars = [A0_2, mu0, sig0, p0, p1, 0] 
 
     self.fit = ROOT.TF1(self.hist.GetTitle()+"_fit", "gaus(0)+pol"+str(len(pars[3:])-1)+"(3)", \
                 xlow, xhigh)
@@ -107,6 +105,8 @@ class MyHist(MyData):
     for i in range(len(pars)):
       if pars[i] != 0:
         self.fit.SetParLimits(i, *sorted([pars[i]*.25, pars[i]*1.75]))
+      elif i>3:
+        self.fit.SetParLimits(i, *sorted([-1*abs(pars[i-1]*.25/2), abs(pars[i]*.25/2)]))
     
     for i in range(2):
       self.hist.Fit(self.fit, "QRM0")
@@ -115,6 +115,10 @@ class MyHist(MyData):
     
     self.gaus.SetParameters(pars[0],pars[1],pars[2])
     self.bg.SetParameters(pars[3],pars[4],pars[5])
+    
+    self.fit.SetRange(pars[1]-3*pars[2], pars[1]+3*pars[2])
+    self.gaus.SetRange(pars[1]-3*pars[2], pars[1]+3*pars[2])
+    self.bg.SetRange(pars[1]-3*pars[2], pars[1]+3*pars[2])
     
     #lg.AddEntry(None, "\mu {:.5f}".format(pars[1]), "")#
     #lg.AddEntry(None, " \pm{:.5f} GeV".format(errs[1]), "")
@@ -127,7 +131,6 @@ class MyHist(MyData):
     self.lg.AddEntry(self.fit, "Background Fit", "")
     
     self.setRange([xmin,xmax])
-    #TODO
     self.fjson[self.name] = [self.hist.GetEntries(),\
           [pars[0],pars[1],pars[2],pars[3],pars[4],pars[5]]]
     self.fitted = True
@@ -143,7 +146,6 @@ class MyHist(MyData):
     if y is not None: ya.SetRange(ya.FindBin(y[0]), ya.FindBin(y[1]))
 
   def getHist(self, name, template ):
-    #TODO
     if name in self.froot.GetListOfKeys(): 
       self.hist = self.froot.Get(name)
     else:
@@ -162,21 +164,24 @@ class MyHist(MyData):
 
   def Draw(self, drawopt, fname, pos = 1, col=ROOT.kBlue, print_bg=True ):
     self.c.cd(pos)
-    self.hist.SetLineColor(ROOT.kBlue)
     if self.hist.__class__ is ROOT.TH1F:
       self.hist.SetMinimum(0)
-    #self.c.SetGrid(True)
     self.hist.SetLineColor(col)
     self.hist.Draw(drawopt)
+    
     if print_bg and self.fitted:
+      ROOT.gStyle.SetOptStat("e")
       #self.lg.Draw("same")
       self.fit.Draw("same");self.fit.SetLineColor(ROOT.kRed)
       self.gaus.Draw("same");self.gaus.SetLineColor(ROOT.kMagenta)
       self.bg.Draw("same");self.bg.SetLineColor(ROOT.kGreen)
-    #TODO
+    else:
+      ROOT.gStyle.SetOptStat("")
+    
     if self.fjson["json_name"] != "":
       with open(self.fjson["json_name"], 'w') as f:
         json.dump(self.fjson, f)
+    
     if not os.path.isdir("/".join(fname.split("/")[0:-1])):
       os.makedirs("/".join(fname.split("/")[0:-1]))
     self.c.Print(fname)

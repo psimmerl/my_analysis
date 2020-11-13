@@ -3,8 +3,8 @@ dir=/volatile/clas12/psimmerl/my_analysis/kaon
 kFD=$dir/kaon_FD_events.hipo
 
 rm $dir/*.root
-rm $dir/kaon_FD_events.hipo
-run-groovy make_hipo.groovy /cache/clas12/rg-a/production/recon/fall2018/torus-1/pass1/v0/dst/train/skim4/*.hipo
+#rm $dir/kaon_FD_events.hipo
+#run-groovy make_hipo.groovy /cache/clas12/rg-a/production/recon/fall2018/torus-1/pass1/v0/dst/train/skim4/*.hipo
 
 run-groovy gen_hist.groovy $kFD $dir/no_cuts.root 
 python2.7 kaon/run_brandon_volatile.py $dir/no_cuts.root $dir/hists/
@@ -25,6 +25,7 @@ run-groovy gen_hist.groovy $kFD $dir/mass_vz_cp_cuts.root ecut pcut kpcut kmcut 
 run-groovy gen_hist.groovy $kFD $dir/mass_vz_ckp_cuts.root ecut pcut kpcut kmcut vzcut ckpcut &
 run-groovy gen_hist.groovy $kFD $dir/mass_vz_ckm_cuts.root ecut pcut kpcut kmcut vzcut ckmcut &
 run-groovy gen_hist.groovy $kFD $dir/mass_vz_cop_cuts.root ecut pcut kpcut kmcut vzcut cpcut ckpcut ckmcut &
+run-groovy gen_hist.groovy $kFD $dir/mass_vz_cop_ikk_cuts.root ecut pcut kpcut kmcut vzcut cpcut ckpcut ckmcut ikkcut &
 
 wait
 

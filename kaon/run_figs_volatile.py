@@ -31,8 +31,6 @@ kmt   = MyHist(cg+"mm2km", f32t, MM+"^{2}"+ep+"pK^{+}X", "K^{-} Mass^{2} (GeV^{2
 kmp   = MyHist(cg+"mm2km", f32c, MM+"^{2}"+ep+"pK^{+}X", "K^{-} Mass^{2} (GeV^{2})", ct, "mm")
 kmf   = MyHist(cb+"mm2km", f32c, MM+"^{2}"+ep+"pK^{+}X", "K^{-} Mass^{2} (GeV^{2})", ct, "mm")
     
-im2 = MyHist(cg+"im2D", f32c, "(FD), "+yim2+" vs "+xim2+", Pass All Cuts", \
-                  xim2+" (GeV)", yim2+" (GeV)","im2D")
 
 f34c="/volatile/clas12/psimmerl/my_analysis/kaon/mass_vz_cuts.root"
 vz  = MyHist(cg+"dvz", f32c, "(FD), "+xvz+"Pass", xvz+" (cm)", ct,"dvz")
@@ -62,11 +60,15 @@ h36r= MyHist(cg+im[2], f34c, xim[2]+", Pass-Fail All Coplan. Cuts", xim[2]+" (Ge
 h36p= MyHist(cg+im[2], f36, xim[2]+", Pass-Fail All Coplan. Cuts", xim[2]+" (GeV)", ct,"imk")
 h36f= MyHist(cb+im[2], f36, xim[2]+", Pass-Fail All Coplan. Cuts", xim[2]+" (GeV)", ct,"imk")
     
-h37p = MyHist(cg+im[1], f36, "(FD), "+xim[1]+", Pass All,--<I.M.k^{+}K^{-}<--",\
+f37 = "/volatile/clas12/psimmerl/my_analysis/kaon/mass_vz_cop_ikk_cuts.root"
+h37p = MyHist(cg+im[1], f37, "(FD), "+xim[1]+", Pass All,--<I.M.k^{+}K^{-}<--",\
                   xim[1]+" (GeV)", ct,"imk")
     
 h38p = MyHist(cg+im[2], f36, "Invariant Mass of Charged Kaons from epK^{+}K^{-}", xim[2]+" (GeV)",\
                 ct,"imk")
+
+im2 = MyHist(cg+"im2D", f37, "(FD), "+yim2+" vs "+xim2+", Pass All Cuts", \
+                  xim2+" (GeV)", yim2+" (GeV)","im2D")
     
     
 met.setRange(  [-1.5,1.5] )
@@ -138,8 +140,8 @@ h36p.Draw("same",pDir+"36.pdf",1,ROOT.kBlue)
 h36f.Draw("same",pDir+"36.pdf",1,ROOT.kRed)
 
 h37p.setCanvas(True); h37p.Draw("",pDir+"37.pdf")
-h38p.setRange([0.96,1.14])
 h38p.gaussFit( 1.02 )
+h38p.setRange([0.96,1.14])
 h38p.setCanvas(True); h38p.Draw("",pDir+"38.pdf")
 
 

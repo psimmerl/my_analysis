@@ -28,6 +28,7 @@ class EPKpKm_FD_mon {
   def cpcut  = true
   def ckpcut = true
   def ckmcut = true
+  def ikkcut = true
 
   def name = ""
 
@@ -47,7 +48,7 @@ class EPKpKm_FD_mon {
   
   def banknames = ['RUN::config', 'REC::Particle','REC::Calorimeter','REC::Cherenkov','REC::Traj']
   
-  def EPKpKm_FD_mon(ecut=false,pcut=false,kpcut=false,kmcut=false,vzcut=false,cpcut=false,ckpcut=false,ckmcut=false) {
+  def EPKpKm_FD_mon(ecut=false,pcut=false,kpcut=false,kmcut=false,vzcut=false,cpcut=false,ckpcut=false,ckmcut=false,ikkcut=false) {
     this.pcut   = pcut
     this.kpcut  = kpcut
     this.kmcut  = kmcut
@@ -56,6 +57,7 @@ class EPKpKm_FD_mon {
     this.cpcut  = cpcut
     this.ckpcut = ckpcut
     this.ckmcut = ckmcut
+    this.ikkcut = ikkcut
     if ( pcut || kpcut || kmcut || ecut || vzcut || cpcut || ckpcut || ckmcut ) {
       def slurper = new JsonSlurper()
       this.mm2_fit_data = new ConcurrentHashMap(slurper.parse(new File('/volatile/clas12/psimmerl/my_analysis/kaon/hists/fits.json')))
@@ -99,6 +101,10 @@ class EPKpKm_FD_mon {
           def kmd = (partb.getShort('status',ikm)/1000/1).toInteger()==2
           def isgood = pd && kpd && kmd
           if (!isgood) { /*println("Uh oh");*/ return null }
+          def ispgood = true
+          def iskpgood = true
+          def iskmgood = true
+          def isegood = true
 
           if ( (ecut || pcut || kpcut || kmcut || vzcut || cpcut || ckpcut || ckmcut) && isgood ) {
             def mu0pro  = mm2_fit_data["PASS_mmpro"][1][1]
@@ -111,10 +117,10 @@ class EPKpKm_FD_mon {
             def sig0me  = mm2_fit_data["PASS_me"][1][2]
             def mu0vz   = mm2_fit_data["PASS_dvz"][1][1]
             def sig0vz  = mm2_fit_data["PASS_dvz"][1][2]
-            if ( pcut   ) { isgood = isgood && Math.abs((mm2pro.mass()-mu0pro)/sig0pro/1) < 4 }
-            if ( kpcut  ) { isgood = isgood && Math.abs((mm2kp.mass2()-mu0kp)/sig0kp/1) < 4 }
-            if ( kmcut  ) { isgood = isgood && Math.abs((mm2km.mass2()-mu0km)/sig0km/1) < 4 }
-            if ( ecut   ) { isgood = isgood && Math.abs((mm.e()-mu0me)/sig0me/1) < 4 }
+            if ( pcut   ) { ispgood =  Math.abs((mm2pro.mass()-mu0pro)/sig0pro/1) < 4 }
+            if ( kpcut  ) { iskpgood = Math.abs((mm2kp.mass2()-mu0kp)/sig0kp/1) < 4 }
+            if ( kmcut  ) { iskmgood = Math.abs((mm2km.mass2()-mu0km)/sig0km/1) < 4 }
+            if ( ecut   ) { isegood = Math.abs((mm.e()-mu0me)/sig0me/1) < 4 }
             if ( vzcut  ) { isgood = isgood && Math.abs(((vzkp-vzkm)-mu0vz)/sig0vz/1) < 4 }
             if ( cpcut  ) { isgood = isgood && mm2pro.vect().theta(pro.vect()) < 9 }
             if ( ckpcut ) { isgood = isgood && mm2kp.vect().theta(kp.vect()) < 9 }
@@ -122,13 +128,18 @@ class EPKpKm_FD_mon {
 
           }
 
-          def gbname = (isgood ? 'PASS':'FAIL')
+          def egbname = ((ispgood && iskpgood && iskmgood) ? 'PASS':'FAIL')
+          def pgbname = ((isegood && iskpgood && iskmgood) ? 'PASS':'FAIL')
+          def kpgbname = ((isegood && ispgood && iskmgood) ? 'PASS':'FAIL')
+          def kmgbname = ((isegood && ispgood && iskpgood) ? 'PASS':'FAIL')
 
-          hists.computeIfAbsent("${gbname}_me",hmm2).fill(mm.e())
-          hists.computeIfAbsent("${gbname}_mm",hmm2).fill(mm.mass())
-          hists.computeIfAbsent("${gbname}_mmpro",hmm2).fill(mm2pro.mass())
-          hists.computeIfAbsent("${gbname}_mm2kp",hmm2).fill(mm2kp.mass2())
-          hists.computeIfAbsent("${gbname}_mm2km",hmm2).fill(mm2km.mass2())
+          hists.computeIfAbsent("${egbname}_me",hmm2).fill(mm.e())
+          hists.computeIfAbsent("${egbname}_mm",hmm2).fill(mm.mass())
+          hists.computeIfAbsent("${pgbname}_mmpro",hmm2).fill(mm2pro.mass())
+          hists.computeIfAbsent("${kpgbname}_mm2kp",hmm2).fill(mm2kp.mass2())
+          hists.computeIfAbsent("${kmgbname}_mm2km",hmm2).fill(mm2km.mass2())
+         
+          def gbname = (isgood ? 'PASS':'FAIL')
           
           hists.computeIfAbsent("${gbname}_improkp",himpro).fill(improkp.mass())
           hists.computeIfAbsent("${gbname}_improkm",himpro).fill(improkm.mass())
