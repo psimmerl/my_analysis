@@ -48,6 +48,7 @@ for cut in ["FD"]:#cuts:
       kp.gaussFit( 0.494**2 )
       km.gaussFit( 0.494**2 )
       vz.gaussFit( 0.0 )
+      ikpkm.gaussFit( 0.0 )
     me.setRange(  [-1.5,1.5] )
     pro.setRange( [0,2] )
     kp.setRange( [-.5,1.5] )

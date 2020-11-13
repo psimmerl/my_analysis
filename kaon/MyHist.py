@@ -101,12 +101,12 @@ class MyHist(MyData):
     self.lg.SetTextSize(0.04)#hist.SetStats(0)
     
     self.fit.SetParameters(*pars)
-    self.fit.SetParNames("A", "\mu", "\sigma", "Cons", "Lin")
+    self.fit.SetParNames("A", "\mu", "\sigma", "Cons", "Lin", "Quad")
     for i in range(len(pars)):
       if pars[i] != 0:
         self.fit.SetParLimits(i, *sorted([pars[i]*.25, pars[i]*1.75]))
       elif i>3:
-        self.fit.SetParLimits(i, *sorted([-1*abs(pars[i-1]*.25/2), abs(pars[i]*.25/2)]))
+        self.fit.SetParLimits(i, *sorted([-1*abs(pars[i-1]*.25), abs(pars[i]*.25)]))
     
     for i in range(2):
       self.hist.Fit(self.fit, "QRM0")

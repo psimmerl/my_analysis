@@ -61,14 +61,15 @@ h36p= MyHist(cg+im[2], f36, xim[2]+", Pass-Fail All Coplan. Cuts", xim[2]+" (GeV
 h36f= MyHist(cb+im[2], f36, xim[2]+", Pass-Fail All Coplan. Cuts", xim[2]+" (GeV)", ct,"imk")
     
 f37 = "/volatile/clas12/psimmerl/my_analysis/kaon/mass_vz_cop_ikk_cuts.root"
-h37p = MyHist(cg+im[1], f37, "(FD), "+xim[1]+", Pass All,--<I.M.k^{+}K^{-}<--",\
+im2 = MyHist(cg+"im2D", f36, "(FD), "+yim2+" vs "+xim2+", Pass All Cuts", \
+                  xim2+" (GeV)", yim2+" (GeV)","im2D")
+
+h37p = MyHist(cg+im[1], f37, "(FD), "+xim[1]+", Pass All,--<I.M.K^{+}K^{-}<--",\
                   xim[1]+" (GeV)", ct,"imk")
     
 h38p = MyHist(cg+im[2], f36, "Invariant Mass of Charged Kaons from epK^{+}K^{-}", xim[2]+" (GeV)",\
                 ct,"imk")
 
-im2 = MyHist(cg+"im2D", f37, "(FD), "+yim2+" vs "+xim2+", Pass All Cuts", \
-                  xim2+" (GeV)", yim2+" (GeV)","im2D")
     
     
 met.setRange(  [-1.5,1.5] )
