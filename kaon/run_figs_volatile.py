@@ -1,7 +1,7 @@
 import ROOT, math, sys, argparse
 from MyHist import * 
 
-pDir  = "kaon/pdfs/"
+pDir  = "/u/home/psimmerl/my_analysis/kaon/pdfs/"
 
 ct = "counts"
 xvz = "#Delta Vz_{K^{+}}-Vz_{K^{-}}"
@@ -72,6 +72,11 @@ h38p = MyHist(cg+im[2], f36, "Invariant Mass of Charged Kaons from epK^{+}K^{-}"
 
     
     
+prot.gaussFit( 0.938 )
+met.gaussFit( 0.0 )
+kpt.gaussFit( 0.494**2 )
+kmt.gaussFit( 0.494**2 )
+
 met.setRange(  [-1.5,1.5] )
 mep.setRange(  [-1.5,1.5] )
 mef.setRange(  [-1.5,1.5] )
@@ -88,6 +93,14 @@ kmt.setRange( [-.5,1.5] )
 kmp.setRange( [-.5,1.5] )
 kmf.setRange( [-.5,1.5] )
       
+
+
+met.setCanvas(True,2,2)
+met.Draw( "same",pDir+"32a.pdf",1)
+prot.Draw("same",pDir+"32a.pdf",2)
+kpt.Draw( "same",pDir+"32a.pdf",4)
+kmt.Draw( "same",pDir+"32a.pdf",3)
+
 met.setCanvas(True,2,2)
 met.Draw( "same",pDir+"32b.pdf",1,ROOT.kBlack)
 mep.Draw( "same",pDir+"32b.pdf",1,ROOT.kBlue)
@@ -144,5 +157,6 @@ h37p.setCanvas(True); h37p.Draw("",pDir+"37.pdf")
 h38p.gaussFit( 1.02 )
 h38p.setRange([0.96,1.14])
 h38p.setCanvas(True); h38p.Draw("",pDir+"38.pdf")
+
 
 
