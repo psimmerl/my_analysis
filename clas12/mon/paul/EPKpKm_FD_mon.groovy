@@ -139,6 +139,7 @@ class EPKpKm_FD_mon {
           hists.computeIfAbsent("${egbname}_me",hmm2).fill(mm.e())
           hists.computeIfAbsent("${egbname}_mm",hmm2).fill(mm.mass())
           hists.computeIfAbsent("${pgbname}_mmpro",hmm2).fill(mm2pro.mass())
+          hists.computeIfAbsent("${pgbname}_mm2pro",hmm2).fill(mm2pro.mass2())
           hists.computeIfAbsent("${kpgbname}_mm2kp",hmm2).fill(mm2kp.mass2())
           hists.computeIfAbsent("${kmgbname}_mm2km",hmm2).fill(mm2km.mass2())
          

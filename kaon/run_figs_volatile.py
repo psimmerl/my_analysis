@@ -8,7 +8,7 @@ xvz = "#Delta Vz_{K^{+}}-Vz_{K^{-}}"
 xim2, yim2 = "I.M. PrK^{-}", "I.M. K^{+}K^{-}"
 im,xim = ["improkp","improkm","imkpkm"],["I.M. PrK^{+}","I.M. PrK^{-}","I.M. K^{+}K^{-}"]
 xc = ["Coplanarity "+s for s in ["#Theta_{pr}","#Theta_{K^{+}}","#Theta_{K^{-}}"]]
-ep,MM=": ep#rightarrow e","Missing Mass"
+ep,MM2=": ep#rightarrow e","Missing Mass^{2}"
 
 cg, cb = "PASS_","FAIL_"
 
@@ -19,17 +19,17 @@ met   = MyHist(cg+"me",    f32t, "Missing Energy"+ep+"pK^{+}K^{-}X", "Energy (Ge
 mep   = MyHist(cg+"me",    f32c, "Missing Energy"+ep+"pK^{+}K^{-}X", "Energy (GeV)", ct, "mm")
 mef   = MyHist(cb+"me",    f32c, "Missing Energy"+ep+"pK^{+}K^{-}X", "Energy (GeV)", ct, "mm")
 
-prot  = MyHist(cg+"mmpro", f32t, MM+ep+"K^{+}K^{-}X", "Proton Mass (GeV)", ct, "mm")
-prop  = MyHist(cg+"mmpro", f32c, MM+ep+"k^{+}K^{-}X", "Proton Mass (GeV)", ct, "mm")
-prof  = MyHist(cb+"mmpro", f32c, MM+ep+"K^{+}K^{-}X", "Proton Mass (GeV)", ct, "mm")
+prot  = MyHist(cg+"mm2pro", f32t, MM2+ep+"K^{+}K^{-}X", "Proton Mass (GeV^{2})", ct, "mm")
+prop  = MyHist(cg+"mm2pro", f32c, MM2+ep+"k^{+}K^{-}X", "Proton Mass (GeV^{2})", ct, "mm")
+prof  = MyHist(cb+"mm2pro", f32c, MM2+ep+"K^{+}K^{-}X", "Proton Mass (GeV^{2})", ct, "mm")
 
-kpt   = MyHist(cg+"mm2kp", f32t, MM+"^{2}"+ep+"pK^{-}X", "K^{+} Mass^{2} (GeV^{2})", ct, "mm")
-kpp   = MyHist(cg+"mm2kp", f32c, MM+"^{2}"+ep+"pK^{-}X", "K^{+} Mass^{2} (GeV^{2})", ct, "mm")
-kpf   = MyHist(cb+"mm2kp", f32c, MM+"^{2}"+ep+"pK^{-}X", "K^{+} Mass^{2} (GeV^{2})", ct, "mm")
+kpt   = MyHist(cg+"mm2kp", f32t, MM2+ep+"pK^{-}X", "K^{+} Mass (GeV^{2})", ct, "mm")
+kpp   = MyHist(cg+"mm2kp", f32c, MM2+ep+"pK^{-}X", "K^{+} Mass (GeV^{2})", ct, "mm")
+kpf   = MyHist(cb+"mm2kp", f32c, MM2+ep+"pK^{-}X", "K^{+} Mass (GeV^{2})", ct, "mm")
 
-kmt   = MyHist(cg+"mm2km", f32t, MM+"^{2}"+ep+"pK^{+}X", "K^{-} Mass^{2} (GeV^{2})", ct, "mm")
-kmp   = MyHist(cg+"mm2km", f32c, MM+"^{2}"+ep+"pK^{+}X", "K^{-} Mass^{2} (GeV^{2})", ct, "mm")
-kmf   = MyHist(cb+"mm2km", f32c, MM+"^{2}"+ep+"pK^{+}X", "K^{-} Mass^{2} (GeV^{2})", ct, "mm")
+kmt   = MyHist(cg+"mm2km", f32t, MM2+ep+"pK^{+}X", "K^{-} Mass (GeV^{2})", ct, "mm")
+kmp   = MyHist(cg+"mm2km", f32c, MM2+ep+"pK^{+}X", "K^{-} Mass (GeV^{2})", ct, "mm")
+kmf   = MyHist(cb+"mm2km", f32c, MM2+ep+"pK^{+}X", "K^{-} Mass (GeV^{2})", ct, "mm")
     
 
 f34c="/volatile/clas12/psimmerl/my_analysis/kaon/mass_vz_cuts.root"
