@@ -46,6 +46,7 @@ class EPKpKm_FD_mon {
   def hThetaPhi = {new H2F("$it", "$it", 1000, 0, 90, 1000, -30, 330)}
 
   def hW2D = {new H2F("$it", "$it", 1000, 0, 4.5, 1000, 0, 10)}
+  def hWXB = {new H2F("$it", "$it", 1000, 0, 1.0, 1000, 0, 10)}
   
   def banknames = ['RUN::config', 'REC::Particle','REC::Calorimeter','REC::Cherenkov','REC::Traj']
   
@@ -175,7 +176,7 @@ class EPKpKm_FD_mon {
           hists.computeIfAbsent("${gbname}_coplanekm",hcoplane).fill(mm2km.vect().theta(km.vect())) 
           
           hists.computeIfAbsent("${gbname}_q2w",hW2D).fill(eX.mass(), Q2)
-          hists.computeIfAbsent("${gbname}_q2Xb",hW2D).fill(Xb, Q2)
+          hists.computeIfAbsent("${gbname}_q2Xb",hWXB).fill(Xb, Q2)
           
           [[iele,ele,"ele"],[ipro,pro,"pro"],[ikp,kp,"kp"],[ikm,km,"km"]].each{ip,part,name->
             //def adj_phi = phi-(((sec-1)*60-(sec>4 ? 1 : 0))+(sec==4 ? 1 : 0)*(phi<0 ? 1 : 0))*360
