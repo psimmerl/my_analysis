@@ -20,11 +20,13 @@ class MyData:
                 "PhiP"     : ROOT.TH2F("PhiP",  "PhiP",  1000, -30, 330, 1000, 0,   10),  \
                 "ThPhi"    : ROOT.TH2F("ThPhi", "ThPhi", 1000, 0,   90,  1000, -30, 330), \
                 "im2D"     : ROOT.TH2F("im2D",  "im2D",  180,  0.5, 5,   180,  0.8, 2.2), \
+                "q2Xb"     : ROOT.TH2F("q2Xb",  "q2Xb",  1000, 0,   1.0, 1000, 0,   10), \
                 "q2w"      : ROOT.TH2F("q2w",   "q2w",   1000, 0,   4.5, 1000, 0,   10) }
   #linewidth = 2
   c = ROOT.TCanvas("c","c",800,800)
   fjson = {"json_name" : ""}
   froot = ROOT.TFile()
+  nsig = 3
 
 class MyHist(MyData):
   def __init__(self, name, fname, title="", xlabel="x", ylabel="y", template="mm2" ):
@@ -33,6 +35,7 @@ class MyHist(MyData):
     self.getHist(name, template)
     self.setLabels(title, xlabel, ylabel)
     self.fitted = False
+    self.lines = []
 
   def setLabels(self, title, xlabel, ylabel ):
     self.hist.SetTitle(title)
@@ -84,7 +87,7 @@ class MyHist(MyData):
       sig0 = 0.05
     else:
       sig0 = sig0/k
-    xlow, xhigh = mu0-3*sig0, mu0+3*sig0
+    xlow, xhigh = mu0-self.nsig*sig0, mu0+self.nsig*sig0
     self.setRange([xlow, xhigh])
     p1 = (self.hist.GetBinContent(xa.FindBin(xhigh))-self.hist.GetBinContent(xa.FindBin(xlow)))\
           /(xhigh-xlow)
@@ -102,23 +105,24 @@ class MyHist(MyData):
     
     self.fit.SetParameters(*pars)
     self.fit.SetParNames("A", "\mu", "\sigma", "Cons", "Lin", "Quad")
-    for i in range(len(pars)):
-      if pars[i] != 0:
-        self.fit.SetParLimits(i, *sorted([pars[i]*.25, pars[i]*1.75]))
-      elif i>3:
-        self.fit.SetParLimits(i, *sorted([-1*abs(pars[i-1]*.25), abs(pars[i]*.25)]))
-    
-    for i in range(2):
+   
+    p = len(pars)
+    for i in range(10):
+      #for j in range(p):
+        #if pars[j] != 0:
+        #  self.fit.SetParLimits(j, *sorted([pars[j]*0.1, pars[j]*1.75]))
+        #elif j>3:
+        #  self.fit.SetParLimits(j, *sorted([-1*abs(pars[j-1]*.5), abs(pars[j-1]*.5)]))
       self.hist.Fit(self.fit, "QRM0")
       pars, errs = self.fit.GetParameters(), self.fit.GetParErrors()
-      self.setRange([pars[1]-3*pars[2], pars[1]+3*pars[2]])
+      self.setRange([pars[1]-self.nsig*pars[2], pars[1]+self.nsig*pars[2]])
+      self.fit.SetRange(pars[1]-self.nsig*pars[2], pars[1]+self.nsig*pars[2])
     
     self.gaus.SetParameters(pars[0],pars[1],pars[2])
     self.bg.SetParameters(pars[3],pars[4],pars[5])
     
-    self.fit.SetRange(pars[1]-3*pars[2], pars[1]+3*pars[2])
-    self.gaus.SetRange(pars[1]-3*pars[2], pars[1]+3*pars[2])
-    self.bg.SetRange(pars[1]-3*pars[2], pars[1]+3*pars[2])
+    self.gaus.SetRange(pars[1]-self.nsig*pars[2], pars[1]+self.nsig*pars[2])
+    self.bg.SetRange(pars[1]-self.nsig*pars[2], pars[1]+self.nsig*pars[2])
     
     #lg.AddEntry(None, "\mu {:.5f}".format(pars[1]), "")#
     #lg.AddEntry(None, " \pm{:.5f} GeV".format(errs[1]), "")
@@ -162,14 +166,20 @@ class MyHist(MyData):
       self.c.Clear()
     self.c.Divide(cols,rows)
 
-  def Draw(self, drawopt, fname, pos = 1, col=ROOT.kBlue, print_bg=True ):
+  def Draw(self, drawopt, fname, pos = 1, col=ROOT.kBlue, print_fit=True, lines=[]):
     self.c.cd(pos)
     if self.hist.__class__ is ROOT.TH1F:
       self.hist.SetMinimum(0)
     self.hist.SetLineColor(col)
     self.hist.Draw(drawopt)
-    
-    if print_bg and self.fitted:
+    if len(lines)>0:
+      for l in lines:
+        self.c.Update()
+        my_l = ROOT.TLine(l, 0, l, ROOT.gPad.GetUymax())#self.hist.GetYaxis().GetXmax())
+        my_l.SetLineColor(ROOT.kRed)
+        my_l.Draw()
+        self.lines.append(my_l)
+    if print_fit and self.fitted:
       ROOT.gStyle.SetOptStat("e")
       #self.lg.Draw("same")
       self.fit.Draw("same");self.fit.SetLineColor(ROOT.kRed)

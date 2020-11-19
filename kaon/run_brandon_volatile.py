@@ -34,6 +34,7 @@ for cut in ["FD"]:#cuts:
     ckm  = MyHist(c_gb+"coplanekm", ff, "K^{-}, "+xc[2]+cgb,     xc[2],                 ct,"coplane")
     im2  = MyHist(c_gb+"im2D",      ff, yim2+" vs "+xim2+cgb,    xim2+" (GeV)", yim2+" (GeV)","im2D")
     q2w  = MyHist(c_gb+"q2w",       ff, "Q^{2} vs W"+cgb,       "W (GeV)",  "Q^{2} (GeV^{2})", "q2w")
+    q2Xb = MyHist(c_gb+"q2Xb",      ff, "Q^{2} vs x_{B}"+cgb,   "x_{B}",    "Q^{2} (GeV^{2})","q2Xb")
     ThP,PhiP,ThPhi =[],[],[]
     for p, P in zip(["ele","pro","kp","km"],[s+", "for s in ["Electron","Proton","K^{+}","K^{-}"]]):
       ThP.append(  MyHist(c_gb+p+"_ThP",  ff, P+"P  vs #Theta"+cgb,  "#Theta","P (GeV)","ThP"))
@@ -71,6 +72,7 @@ for cut in ["FD"]:#cuts:
     ckm.Draw("same",fdir+"coplane.pdf",3)
     im2.setCanvas(True); im2.Draw("COLZ", fdir+"im2D.pdf")
     q2w.setCanvas(True); q2w.Draw("COLZ", fdir+"q2w.pdf")
+    q2Xb.setCanvas(True); q2Xb.Draw("COLZ", fdir+"q2Xb.pdf")
     ThP[0].setCanvas(  True,2,2); 
     for i in range(4): ThP[i].Draw(  "COLZ", fdir+"ThetaP.pdf",  i+1)
     PhiP[0].setCanvas( True,2,2); 

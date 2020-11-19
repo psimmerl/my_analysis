@@ -29,6 +29,7 @@ class EPKpKm_FD_mon {
   def ckpcut = true
   def ckmcut = true
   def ikkcut = true
+  def cut = "all"
 
   def name = ""
 
@@ -48,7 +49,7 @@ class EPKpKm_FD_mon {
   
   def banknames = ['RUN::config', 'REC::Particle','REC::Calorimeter','REC::Cherenkov','REC::Traj']
   
-  def EPKpKm_FD_mon(json_name='/volatile/clas12/psimmerl/my_analysis/kaon/hists/fits.json',ecut=false,pcut=false,kpcut=false,kmcut=false,vzcut=false,cpcut=false,ckpcut=false,ckmcut=false,ikkcut=false) {
+  def EPKpKm_FD_mon(json_name='/volatile/clas12/psimmerl/my_analysis/kaon/hists/fits.json',cut="all",ecut=false,pcut=false,kpcut=false,kmcut=false,vzcut=false,cpcut=false,ckpcut=false,ckmcut=false,ikkcut=false) {
     this.pcut   = pcut
     this.kpcut  = kpcut
     this.kmcut  = kmcut
@@ -58,6 +59,7 @@ class EPKpKm_FD_mon {
     this.ckpcut = ckpcut
     this.ckmcut = ckmcut
     this.ikkcut = ikkcut
+    this.cut = cut
     if ( pcut || kpcut || kmcut || ecut || vzcut || cpcut || ckpcut || ckmcut || ikkcut) {
       def slurper = new JsonSlurper()
       this.mm2_fit_data = new ConcurrentHashMap(slurper.parse(new File(json_name)))
@@ -92,6 +94,7 @@ class EPKpKm_FD_mon {
           
           def eX  = beam+target-ele   
           def Q2 = KinTool.calcQ2(beam, ele)
+          def Xb = KinTool.calcXb(beam, ele)
           
           def vzkp = partb.getFloat('vz', ikp) 
           def vzkm = partb.getFloat('vz', ikm)
@@ -105,6 +108,11 @@ class EPKpKm_FD_mon {
           def iskpgood = true
           def iskmgood = true
           def isegood = true
+          def isvzgood = true
+          def iscpgood = true
+          def isckpgood = true
+          def isckmgood = true
+          def isikkgood = true
 
           if ( (ecut || pcut || kpcut || kmcut || vzcut || cpcut || ckpcut || ckmcut || ikkcut) && isgood ) {
             def mu0pro  = mm2_fit_data["PASS_mmpro"][1][1]
@@ -123,12 +131,22 @@ class EPKpKm_FD_mon {
             if ( kpcut  ) { iskpgood = Math.abs((mm2kp.mass2()-mu0kp)/sig0kp/1) < 4 }
             if ( kmcut  ) { iskmgood = Math.abs((mm2km.mass2()-mu0km)/sig0km/1) < 4 }
             if ( ecut   ) { isegood = Math.abs((mm.e()-mu0me)/sig0me/1) < 4 }
-            if ( vzcut  ) { isgood = isgood && Math.abs(((vzkp-vzkm)-mu0vz)/sig0vz/1) < 4 }
-            if ( cpcut  ) { isgood = isgood && mm2pro.vect().theta(pro.vect()) < 9 }
-            if ( ckpcut ) { isgood = isgood && mm2kp.vect().theta(kp.vect()) < 9 }
-            if ( ckmcut ) { isgood = isgood && mm2km.vect().theta(km.vect()) < 9 }
-            if ( ikkcut  ) { isgood = isgood && Math.abs(((imkpkm.mass())-mu0ikk)/sig0ikk/1) < 4 }
+            if ( vzcut  ) { isvzgood = Math.abs(((vzkp-vzkm)-mu0vz)/sig0vz/1) < 4 }
+            if ( cpcut  ) { iscpgood = mm2pro.vect().theta(pro.vect()) < 9 }
+            if ( ckpcut ) { isckpgood = mm2kp.vect().theta(kp.vect()) < 9 }
+            if ( ckmcut ) { isckmgood = mm2km.vect().theta(km.vect()) < 9 }
+            if ( ikkcut ) { isikkgood = Math.abs(((imkpkm.mass())-mu0ikk)/sig0ikk/1) < 4 }
 
+          }
+          isgood  = isgood && isegood && ispgood && iskpgood && iskmgood && isvzgood && iscpgood && isckpgood && isckmgood && isikkgood
+          if ( !isgood ) {
+            if ( cut == "mass" )   { if (isegood && ispgood && iskpgood && iskmgood) { return null}}
+            if (cut == "vz")  { if (isvzgood) { return null} }
+            if (cut == "cop") { if (iscpgood && isckpgood && isckmgood) { return null} }
+            if (cut == "cp")  { if (iscpgood) { return null} }
+            if (cut == "ckp") { if (isckpgood) { return null} }
+            if (cut == "ckm") { if (isckmgood) { return null} }
+            if (cut == "ikk") { if (isikkgood) { return null} }
           }
 
           def egbname = ((ispgood && iskpgood && iskmgood) ? 'PASS':'FAIL')
@@ -142,8 +160,8 @@ class EPKpKm_FD_mon {
           hists.computeIfAbsent("${pgbname}_mm2pro",hmm2).fill(mm2pro.mass2())
           hists.computeIfAbsent("${kpgbname}_mm2kp",hmm2).fill(mm2kp.mass2())
           hists.computeIfAbsent("${kmgbname}_mm2km",hmm2).fill(mm2km.mass2())
-         
-          def gbname = ((isgood && isegood && ispgood && iskpgood && iskmgood) ? 'PASS':'FAIL')
+
+          def gbname = isgood ? 'PASS':'FAIL'
           
           hists.computeIfAbsent("${gbname}_improkp",himpro).fill(improkp.mass())
           hists.computeIfAbsent("${gbname}_improkm",himpro).fill(improkm.mass())
@@ -157,6 +175,7 @@ class EPKpKm_FD_mon {
           hists.computeIfAbsent("${gbname}_coplanekm",hcoplane).fill(mm2km.vect().theta(km.vect())) 
           
           hists.computeIfAbsent("${gbname}_q2w",hW2D).fill(eX.mass(), Q2)
+          hists.computeIfAbsent("${gbname}_q2Xb",hW2D).fill(Xb, Q2)
           
           [[iele,ele,"ele"],[ipro,pro,"pro"],[ikp,kp,"kp"],[ikm,km,"km"]].each{ip,part,name->
             //def adj_phi = phi-(((sec-1)*60-(sec>4 ? 1 : 0))+(sec==4 ? 1 : 0)*(phi<0 ? 1 : 0))*360

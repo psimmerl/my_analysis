@@ -70,58 +70,50 @@ h37p = MyHist(cg+im[1], f37, "(FD), "+xim[1]+", Pass All,--<I.M.K^{+}K^{-}<--",\
 h38p = MyHist(cg+im[2], f36, "Invariant Mass of Charged Kaons from epK^{+}K^{-}", xim[2]+" (GeV)",\
                 ct,"imk")
 
-    
-    
-prot.gaussFit( 0.938 )
-met.gaussFit( 0.0 )
-kpt.gaussFit( 0.494**2 )
-kmt.gaussFit( 0.494**2 )
 
-met.setRange(  [-1.5,1.5] )
-mep.setRange(  [-1.5,1.5] )
-mef.setRange(  [-1.5,1.5] )
-
-prot.setRange( [0,2] )
-prop.setRange( [0,2] )
-prof.setRange( [0,2] )
-
-kpt.setRange( [-.5,1.5] )
-kpp.setRange( [-.5,1.5] )
-kpf.setRange( [-.5,1.5] )
-
-kmt.setRange( [-.5,1.5] )
-kmp.setRange( [-.5,1.5] )
-kmf.setRange( [-.5,1.5] )
-      
-
+met.setRange(  [-1.5,1.5] );mep.setRange(  [-1.5,1.5] );mef.setRange(  [-1.5,1.5] )
+prot.setRange( [0,2] );prop.setRange( [0,2] );prof.setRange( [0,2] )
+kpt.setRange( [-.5,1.5] );kpp.setRange( [-.5,1.5] );kpf.setRange( [-.5,1.5] )
+kmt.setRange( [-.5,1.5] );kmp.setRange( [-.5,1.5] );kmf.setRange( [-.5,1.5] )
 
 met.setCanvas(True,2,2)
-met.Draw( "same",pDir+"32a.pdf",1)
-prot.Draw("same",pDir+"32a.pdf",2)
-kpt.Draw( "same",pDir+"32a.pdf",4)
-kmt.Draw( "same",pDir+"32a.pdf",3)
+met.Draw( "same",pDir+"32b.pdf",1,ROOT.kBlack,print_fit=False)
+mep.Draw( "same",pDir+"32b.pdf",1,ROOT.kBlue,print_fit=False)
+mef.Draw( "same",pDir+"32b.pdf",1,ROOT.kRed,print_fit=False)
+
+prot.Draw("same",pDir+"32b.pdf",2,ROOT.kBlack,print_fit=False)
+prop.Draw("same",pDir+"32b.pdf",2,ROOT.kBlue,print_fit=False)
+prof.Draw("same",pDir+"32b.pdf",2,ROOT.kRed,print_fit=False)
+
+kpt.Draw( "same",pDir+"32b.pdf",4,ROOT.kBlack,print_fit=False)
+kpp.Draw( "same",pDir+"32b.pdf",4,ROOT.kBlue,print_fit=False)
+kpf.Draw( "same",pDir+"32b.pdf",4,ROOT.kRed,print_fit=False)
+
+kmt.Draw( "same",pDir+"32b.pdf",3,ROOT.kBlack,print_fit=False)
+kmp.Draw( "same",pDir+"32b.pdf",3,ROOT.kBlue,print_fit=False)
+kmf.Draw( "same",pDir+"32b.pdf",3,ROOT.kRed,print_fit=False)
+
+ppars=prot.gaussFit( 0.938 )
+mepars=met.gaussFit( 0.0 )
+kppars=kpt.gaussFit( 0.494**2 )
+kmpars=kmt.gaussFit( 0.494**2 )
+
+met.setRange(  [-1.5,1.5] );mep.setRange(  [-1.5,1.5] );mef.setRange(  [-1.5,1.5] )
+prot.setRange( [0,2] );prop.setRange( [0,2] );prof.setRange( [0,2] )
+kpt.setRange( [-.5,1.5] );kpp.setRange( [-.5,1.5] );kpf.setRange( [-.5,1.5] )
+kmt.setRange( [-.5,1.5] );kmp.setRange( [-.5,1.5] );kmf.setRange( [-.5,1.5] )
 
 met.setCanvas(True,2,2)
-met.Draw( "same",pDir+"32b.pdf",1,ROOT.kBlack)
-mep.Draw( "same",pDir+"32b.pdf",1,ROOT.kBlue)
-mef.Draw( "same",pDir+"32b.pdf",1,ROOT.kRed)
-
-prot.Draw("same",pDir+"32b.pdf",2,ROOT.kBlack)
-prop.Draw("same",pDir+"32b.pdf",2,ROOT.kBlue)
-prof.Draw("same",pDir+"32b.pdf",2,ROOT.kRed)
-
-kpt.Draw( "same",pDir+"32b.pdf",4,ROOT.kBlack)
-kpp.Draw( "same",pDir+"32b.pdf",4,ROOT.kBlue)
-kpf.Draw( "same",pDir+"32b.pdf",4,ROOT.kRed)
-
-kmt.Draw( "same",pDir+"32b.pdf",3,ROOT.kBlack)
-kmp.Draw( "same",pDir+"32b.pdf",3,ROOT.kBlue)
-kmf.Draw( "same",pDir+"32b.pdf",3,ROOT.kRed)
+met.Draw( "same",pDir+"32a.pdf",1, lines=[mepars[1]+4*mepars[2],mepars[1]-4*mepars[2]])
+prot.Draw("same",pDir+"32a.pdf",2, lines=[ppars[1]+4*ppars[2],ppars[1]-4*ppars[2]])
+kpt.Draw( "same",pDir+"32a.pdf",4, lines=[kppars[1]+4*kppars[2],kppars[1]-4*kppars[2]])
+kmt.Draw( "same",pDir+"32a.pdf",3, lines=[kmpars[1]+4*kmpars[2],kmpars[1]-4*kmpars[2]])
 
 im2.setCanvas(True); im2.Draw("COLZ", pDir+"33.pdf")
 
-vz.gaussFit( 0.0 )
-vz.setCanvas(True); vz.Draw("", pDir+"34a.pdf")
+vzpars = vz.gaussFit( 0.0 )
+vz.setCanvas(True);
+vz.Draw("same", pDir+"34a.pdf",lines=[vzpars[1]+4*vzpars[2],vzpars[1]-4*vzpars[2]])
 
 h34br.setCanvas(True,1,1) 
 h34br.Draw( "same",pDir+"34b.pdf",1,ROOT.kBlack)
@@ -129,9 +121,9 @@ h34bp.Draw( "same",pDir+"34b.pdf",1,ROOT.kBlue)
 h34bf.Draw( "same",pDir+"34b.pdf",1,ROOT.kRed)
 
 
-cp.setCanvas(True); cp.Draw( "",pDir+"35a.pdf")
-ckp.setCanvas(True); ckp.Draw( "",pDir+"35c.pdf")
-ckm.setCanvas(True); ckm.Draw( "",pDir+"35e.pdf")
+cp.setCanvas(True); cp.Draw( "",pDir+"35a.pdf",lines=[9])
+ckp.setCanvas(True); ckp.Draw( "",pDir+"35c.pdf",lines=[9])
+ckm.setCanvas(True); ckm.Draw( "",pDir+"35e.pdf",lines=[9])
 
 h35bt.setCanvas(True)
 h35bt.Draw("same",pDir+"35b.pdf",1,ROOT.kBlack)
