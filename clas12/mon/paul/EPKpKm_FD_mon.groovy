@@ -141,13 +141,20 @@ class EPKpKm_FD_mon {
           }
           isgood  = isgood && isegood && ispgood && iskpgood && iskmgood && isvzgood && iscpgood && isckpgood && isckmgood && isikkgood
           if ( !isgood ) {
-            if ( cut == "mass" )   { if (isegood && ispgood && iskpgood && iskmgood) { return null}}
-            if (cut == "vz")  { if (isvzgood) { return null} }
-            if (cut == "cop") { if (iscpgood && isckpgood && isckmgood) { return null} }
-            if (cut == "cp")  { if (iscpgood) { return null} }
-            if (cut == "ckp") { if (isckpgood) { return null} }
-            if (cut == "ckm") { if (isckmgood) { return null} }
-            if (cut == "ikk") { if (isikkgood) { return null} }
+            if ( cut == "mass" )  
+              { if (!isvzgood || !iscpgood || !isckpgood || !isckmgood || !isikkgood) { return null}}
+            if (cut == "vz")  
+              { if (!isegood || !ispgood || !iskpgood || !iskmgood || !iscpgood || !isckpgood || !isckmgood || !isikkgood) { return null} }
+            if (cut == "cop") 
+              { if (!isegood || !ispgood || !iskpgood || !iskmgood || !isvzgood || !isikkgood) { return null} }
+            if (cut == "cp")  
+              { if (!isegood || !ispgood || !iskpgood || !iskmgood || !isvzgood || !isckpgood || !isckmgood || !isikkgood) { return null} }
+            if (cut == "ckp") 
+              { if (!isegood || !ispgood || !iskpgood || !iskmgood || !isvzgood || !iscpgood || !isckmgood || !isikkgood) { return null} }
+            if (cut == "ckm") 
+              { if (!isegood || !ispgood || !iskpgood || !iskmgood || !isvzgood || !iscpgood || !isckpgood || !isikkgood) { return null} }
+            if (cut == "ikk") 
+              { if (!isegood || !ispgood || !iskpgood || !iskmgood || !isvzgood || !iscpgood || !isckpgood || !isckmgood) { return null} }
           }
 
           def egbname = ((ispgood && iskpgood && iskmgood) ? 'PASS':'FAIL')
