@@ -55,33 +55,33 @@ for cut in ["FD"]:#cuts:
     kp.setRange( [-.5,1.5] )
     km.setRange( [-.5,1.5] )
       
-    mm.setCanvas(True); mm.Draw("", fdir+"mm.pdf")
+    mm.setCanvas(True); mm.Draw("", fdir+"mm.png")
     pro.setCanvas(True,2,2)
-    me.Draw( "same",fdir+"mmm.pdf",1)
-    pro.Draw("same",fdir+"mmm.pdf",2)
-    kp.Draw( "same",fdir+"mmm.pdf",4)
-    km.Draw( "same",fdir+"mmm.pdf",3)
-    vz.setCanvas(True); vz.Draw("", fdir+"dvz.pdf")
+    me.Draw( "same",fdir+"mmm.png",1)
+    pro.Draw("same",fdir+"mmm.png",2)
+    kp.Draw( "same",fdir+"mmm.png",4)
+    km.Draw( "same",fdir+"mmm.png",3)
+    vz.setCanvas(True); vz.Draw("", fdir+"dvz.png")
     ipkp.setCanvas(True,3,1)
-    ipkp.Draw( "same",fdir+"im.pdf",1)
-    ipkm.Draw( "same",fdir+"im.pdf",2)
-    ikpkm.Draw("same",fdir+"im.pdf",3)
+    ipkp.Draw( "same",fdir+"im.png",1)
+    ipkm.Draw( "same",fdir+"im.png",2)
+    ikpkm.Draw("same",fdir+"im.png",3)
     cp.setCanvas(True,3,1)
-    cp.Draw( "same",fdir+"coplane.pdf",1)
-    ckp.Draw("same",fdir+"coplane.pdf",2)
-    ckm.Draw("same",fdir+"coplane.pdf",3)
-    im2.setCanvas(True); im2.Draw("COLZ", fdir+"im2D.pdf")
-    q2w.setCanvas(True); q2w.Draw("COLZ", fdir+"q2w.pdf")
-    q2Xb.setCanvas(True); q2Xb.Draw("COLZ", fdir+"q2Xb.pdf")
+    cp.Draw( "same",fdir+"coplane.png",1)
+    ckp.Draw("same",fdir+"coplane.png",2)
+    ckm.Draw("same",fdir+"coplane.png",3)
+    im2.setCanvas(True); im2.Draw("COLZ", fdir+"im2D.png")
+    q2w.setCanvas(True); q2w.Draw("COLZ", fdir+"q2w.png")
+    q2Xb.setCanvas(True); q2Xb.Draw("COLZ", fdir+"q2Xb.png")
     ThP[0].setCanvas(  True,2,2); 
-    for i in range(4): ThP[i].Draw(  "COLZ", fdir+"ThetaP.pdf",  i+1)
+    for i in range(4): ThP[i].Draw(  "COLZ", fdir+"ThetaP.png",  i+1)
     PhiP[0].setCanvas( True,2,2); 
-    for i in range(4): PhiP[i].Draw( "COLZ", fdir+"PhiP.pdf",    i+1)
+    for i in range(4): PhiP[i].Draw( "COLZ", fdir+"PhiP.png",    i+1)
     ThPhi[0].setCanvas(True,2,2); 
-    for i in range(4): ThPhi[i].Draw("COLZ", fdir+"ThetaPhi.pdf",i+1)
+    for i in range(4): ThPhi[i].Draw("COLZ", fdir+"ThetaPhi.png",i+1)
     
-    os.system("pdfunite "+fdir+"*.pdf "+"~/my_analysis/kaon/pdfs/"+\
-            "_".join(fdir.split("/")[-3:-1])+".pdf")
+    #os.system("pdfunite "+fdir+"*.png "+"kaon/pdfs/"+\
+    #        "_".join(fdir.split("/")[-3:-1])+".png")
 
     #w    = [q2w.ProjectionX(c_gb+"w_q2bin"+str(q2), BinFloor(q2, bc),BinFloor(q2+1,bc)) for q2 in range(10)]
     #W
