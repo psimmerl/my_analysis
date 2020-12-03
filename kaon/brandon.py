@@ -1,5 +1,5 @@
 import ROOT, math, sys, argparse
-from MyHist import * 
+from MyHist import MyHist
 
 pDir = "kaon/pdfs/"
 iDir = "kaon/roots/"#"/volatile/clas12/psimmerl/my_analysis/kaon/"

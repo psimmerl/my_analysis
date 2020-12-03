@@ -1,5 +1,5 @@
 import ROOT, math, sys, argparse
-from MyHist import * 
+from MyHist import MyHist
 
 if len(sys.argv) > 1:
   ff    = sys.argv[1] #"/volatile/clas12/psimmerl/my_analysis/kaon/hists.root"
