@@ -13,8 +13,8 @@ ep,MM2=": ep#rightarrow e","Missing Mass^{2}"
 
 cg, cb = "PASS_","FAIL_"
 
-f32t = iDir+"no_cuts.root"
-f32c = iDir+"mass_cuts.root"
+f32t = iDir+"no_cuts_inb.root"
+f32c = iDir+"mass_cuts_inb.root"
 
 met   = MyHist(cg+"me",    f32t, "Missing Energy"+ep+"pK^{+}K^{-}X", "Energy (GeV)", ct, "mm")
 mep   = MyHist(cg+"me",    f32c, "Missing Energy"+ep+"pK^{+}K^{-}X", "Energy (GeV)", ct, "mm")
@@ -33,15 +33,15 @@ kmp   = MyHist(cg+"mm2km", f32c, MM2+ep+"pK^{+}X", "K^{-} Mass (GeV^{2})", ct, "
 kmf   = MyHist(cb+"mm2km", f32c, MM2+ep+"pK^{+}X", "K^{-} Mass (GeV^{2})", ct, "mm")
     
 
-f34c=iDir+"mass_vz_cuts.root"
+f34c=iDir+"mass_vz_cuts_inb.root"
 vz  = MyHist(cg+"dvz", f32c, "(FD), "+xvz+"Pass", xvz+" (cm)", ct,"dvz")
 h34br= MyHist(cg+im[2], f32c, xim[2]+" Pass-Fail "+xvz, xim[2]+" (GeV)", ct,"imk")
 h34bp= MyHist(cg+im[2], f34c, xim[2]+" Pass-Fail "+xvz, xim[2]+" (GeV)", ct,"imk")
 h34bf= MyHist(cb+im[2], f34c, xim[2]+" Pass-Fail "+xvz, xim[2]+" (GeV)", ct,"imk")
     
-f35bc=iDir+"mass_vz_cp_cuts.root"
-f35dc=iDir+"mass_vz_ckp_cuts.root"
-f35fc=iDir+"mass_vz_ckm_cuts.root"
+f35bc=iDir+"mass_vz_cp_cuts_inb.root"
+f35dc=iDir+"mass_vz_ckp_cuts_inb.root"
+f35fc=iDir+"mass_vz_ckm_cuts_inb.root"
 pac, pfc, l9 = ", Pass All Cuts", xim[2]+", Pass-Fail Coplan. #theta_{","<9 deg Cuts"
 cp = MyHist(cg+"coplanepro",f34c, "Proton (FD), "+xc[0]+pac, xc[0], ct,"coplane")
 h35bt= MyHist(cg+im[2], f34c, pfc+"pr}"+l9, xim[2]+" (GeV)",           ct,"imk")
@@ -56,17 +56,23 @@ h35ft= MyHist(cg+im[2], f34c, pfc+"K^{-}}"+l9, xim[2]+" (GeV)",           ct,"im
 h35fp= MyHist(cg+im[2], f35fc, pfc+"K^{-}}"+l9, xim[2]+" (GeV)",           ct,"imk")
 h35ff= MyHist(cb+im[2], f35fc, pfc+"K^{-}}"+l9, xim[2]+" (GeV)",           ct,"imk")
     
-f36=iDir+"mass_vz_cop_cuts.root"
+f36=iDir+"mass_vz_cop_cuts_inb.root"
 h36r= MyHist(cg+im[2], f34c, xim[2]+", Pass-Fail All Coplan. Cuts", xim[2]+" (GeV)", ct,"imk")
 h36p= MyHist(cg+im[2], f36, xim[2]+", Pass-Fail All Coplan. Cuts", xim[2]+" (GeV)", ct,"imk")
 h36f= MyHist(cb+im[2], f36, xim[2]+", Pass-Fail All Coplan. Cuts", xim[2]+" (GeV)", ct,"imk")
     
-f37 = iDir+"mass_vz_cop_ikk_cuts.root"
+
 im2 = MyHist(cg+"im2D", f36, "(FD), "+yim2+" vs "+xim2+", Pass All Cuts", \
                   xim2+" (GeV)", yim2+" (GeV)","im2D")
 
-h37p = MyHist(cg+im[1], f37, "(FD), "+xim[1]+", Pass All,--<I.M.K^{+}K^{-}<--",\
+f37i = iDir+"mass_vz_cop_ikk_cuts_inb.root"
+f37o = iDir+"mass_vz_cop_ikk_cuts_outb.root"
+h37i = MyHist(cg+im[1], f37inb, "(FD) inbNoutb, "+xim[1]+", Pass All,--<I.M.K^{+}K^{-}<--",\
                   xim[1]+" (GeV)", ct,"imk")
+h37o = MyHist(cg+im[1], f37inb, "(FD) outb, "+xim[1]+", Pass All,--<I.M.K^{+}K^{-}<--",\
+                  xim[1]+" (GeV)", ct,"imk")
+h37i.Add(h37o.hist)
+
     
 h38p = MyHist(cg+im[2], f36, "Invariant Mass of Charged Kaons from epK^{+}K^{-}", xim[2]+" (GeV)",\
                 ct,"imk")
@@ -146,7 +152,7 @@ h36r.Draw("same",pDir+"36.png",1,ROOT.kBlack)
 h36p.Draw("same",pDir+"36.png",1,ROOT.kBlue)
 h36f.Draw("same",pDir+"36.png",1,ROOT.kRed)
 
-h37p.setCanvas(True); h37p.Draw("",pDir+"37.png")
+h37.setCanvas(True); h37.Draw("",pDir+"37.png")
 h38p.gaussFit( 1.02 )
 h38p.setRange([0.96,1.14])
 h38p.setCanvas(True); h38p.Draw("",pDir+"38.png")
