@@ -18,15 +18,18 @@ import utils.KinTool
 import my.Sugar
 Sugar.enable()
 
-
-def fin = args[0]
-println(fin)
-def fout = args[1]
-println(fout)
-def fit_json = args[2]
-println(fit_json)
-def cut = args[3]
-println(cut)
+fin = []
+fout = ""
+cut = ""
+args.eachWithIndex{it,index->
+  if (it.contains(".hipo") ) {fin.add(it)}
+  if (it.contains(".root") ) {fout=it}
+  if (it.contains(".json") ) {fjson=it; cut=args[index+1]}
+}
+println("fin: "+fin)
+println("fout: "+fout)
+println("fjson: "+fjson)
+println("cut: "+cut)
 
 def ecut = args.contains("ecut")
 def pcut = args.contains("pcut")
@@ -38,7 +41,7 @@ def ckpcut = args.contains("ckpcut")
 def ckmcut = args.contains("ckmcut")
 def ikkcut = args.contains("ikkcut")
 print(ecut);print(pcut);print(kpcut);print(kmcut);print(vzcut);print(cpcut);print(ckpcut);println(ckmcut);print(ikkcut)
-def kaon_proc = new EPKpKm_FD_mon(fit_json, cut, ecut, pcut, kpcut, kmcut, vzcut, cpcut, ckpcut, ckmcut, ikkcut)
+def kaon_proc = new EPKpKm_FD_mon(fjson, cut, ecut, pcut, kpcut, kmcut, vzcut, cpcut, ckpcut, ckmcut, ikkcut)
 
 
 def evcount = new AtomicInteger()
@@ -57,24 +60,24 @@ def save = {
 }
 save()
 
-//def exe = Executors.newScheduledThreadPool(1)
-//exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
+def exe = Executors.newScheduledThreadPool(1)
+exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
 
-//GParsPool.withPool 1, {
-//  args.eachParallel{fname->
+GParsPool.withPool 5, {
+  fin.eachParallel{fname->
     def reader = new HipoDataSource()
-    reader.open(fin)//fname)
+    reader.open(fname)
     while( reader.hasEvent() ) {
       evcount.getAndIncrement()
       def event = reader.getNextEvent()
       kaon_proc.processEvent(event)
     }
     reader.close()
-//}
-//}
+  }
+}
 
 //if(kaon_proc.metaClass.respondsTo(kaon_proc, 'finish')) kaon_proc.finish()
-//exe.shutdown()
+exe.shutdown()
 save()
 mytime = Math.round((System.currentTimeMillis()-mytime)/1000/60)
 println "Generated ${kaon_proc.hists.size()} Histograms in $mytime minutes"

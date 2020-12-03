@@ -77,7 +77,7 @@ class MyHist(MyData):
     A0, mu0_b = self.hist.GetMaximum(), self.hist.GetMaximumBin()
     mu0 = self.hist.GetBinCenter(mu0_b)
     sig0, k = 0, 0
-    for i in [*range(-8, 0),*range(1, 9)]: 
+    for i in [x for x in xrange(-8, 9) if x != 0]: 
       bv = self.hist.GetBinContent(mu0_b+i)
       bc = self.hist.GetBinCenter(mu0_b+i)
       if bv > 0 and bv < A0: 
