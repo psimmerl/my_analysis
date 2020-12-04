@@ -67,11 +67,11 @@ im2 = MyHist(cg+"im2D", f36, "(FD), "+yim2+" vs "+xim2+", Pass All Cuts", \
 
 f37i = iDir+"mass_vz_cop_ikk_cuts_inb.root"
 f37o = iDir+"mass_vz_cop_ikk_cuts_outb.root"
-h37i = MyHist(cg+im[1], f37inb, "(FD) inbNoutb, "+xim[1]+", Pass All,--<I.M.K^{+}K^{-}<--",\
+h37i = MyHist(cg+im[1], f37i, "(FD) inbNoutb, "+xim[1]+", Pass All,--<I.M.K^{+}K^{-}<--",\
                   xim[1]+" (GeV)", ct,"imk")
-h37o = MyHist(cg+im[1], f37inb, "(FD) outb, "+xim[1]+", Pass All,--<I.M.K^{+}K^{-}<--",\
+h37o = MyHist(cg+im[1], f37o, "(FD) outb, "+xim[1]+", Pass All,--<I.M.K^{+}K^{-}<--",\
                   xim[1]+" (GeV)", ct,"imk")
-h37i.Add(h37o.hist)
+h37i.Add(h37o)
 
     
 h38p = MyHist(cg+im[2], f36, "Invariant Mass of Charged Kaons from epK^{+}K^{-}", xim[2]+" (GeV)",\
@@ -152,7 +152,7 @@ h36r.Draw("same",pDir+"36.png",1,ROOT.kBlack)
 h36p.Draw("same",pDir+"36.png",1,ROOT.kBlue)
 h36f.Draw("same",pDir+"36.png",1,ROOT.kRed)
 
-h37.setCanvas(True); h37.Draw("",pDir+"37.png")
+h37i.setCanvas(True); h37i.Draw("",pDir+"37.png")
 h38p.gaussFit( 1.02 )
 h38p.setRange([0.96,1.14])
 h38p.setCanvas(True); h38p.Draw("",pDir+"38.png")

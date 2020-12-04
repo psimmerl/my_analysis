@@ -63,7 +63,7 @@ save()
 def exe = Executors.newScheduledThreadPool(1)
 exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
 
-GParsPool.withPool 5, {
+GParsPool.withPool 20, {
   fin.eachParallel{fname->
     def reader = new HipoDataSource()
     reader.open(fname)
